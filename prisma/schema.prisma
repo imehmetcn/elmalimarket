@@ -1,0 +1,190 @@
+// Elmalı Market E-ticaret Platformu
+// Prisma Schema Dosyası
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+// Kullanıcı modeli
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  firstName String
+  lastName  String
+  phone     String?
+  role      UserRole @default(CUSTOMER)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // İlişkiler
+  addresses Address[]
+  orders    Order[]
+  carts     Cart[]
+
+  @@map("users")
+}
+
+// Kullanıcı rolleri
+enum UserRole {
+  CUSTOMER
+  ADMIN
+}
+
+// Adres modeli
+model Address {
+  id         String  @id @default(cuid())
+  userId     String
+  title      String
+  firstName  String
+  lastName   String
+  phone      String
+  address    String
+  city       String
+  district   String
+  postalCode String
+  isDefault  Boolean @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // İlişkiler
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  orders Order[]
+
+  @@map("addresses")
+}
+
+// Kategori modeli
+model Category {
+  id          String  @id @default(cuid())
+  name        String  @unique
+  description String?
+  parentId    String?
+  isActive    Boolean @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // İlişkiler
+  parent   Category?  @relation("CategoryParent", fields: [parentId], references: [id])
+  children Category[] @relation("CategoryParent")
+  products Product[]
+
+  @@map("categories")
+}
+
+// Ürün modeli
+model Product {
+  id            String   @id @default(cuid())
+  name          String   @unique
+  description   String
+  price         Float
+  discountPrice Float?
+  stock         Int      @default(0)
+  categoryId    String
+  images        String   @default("")
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // İlişkiler
+  category   Category    @relation(fields: [categoryId], references: [id])
+  cartItems  CartItem[]
+  orderItems OrderItem[]
+
+  @@map("products")
+}
+
+// Sepet modeli
+model Cart {
+  id        String   @id @default(cuid())
+  userId    String?
+  sessionId String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // İlişkiler
+  user  User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items CartItem[]
+
+  @@map("carts")
+}
+
+// Sepet öğesi modeli
+model CartItem {
+  id        String   @id @default(cuid())
+  cartId    String
+  productId String
+  quantity  Int      @default(1)
+  price     Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // İlişkiler
+  cart    Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([cartId, productId])
+  @@map("cart_items")
+}
+
+// Sipariş modeli
+model Order {
+  id              String        @id @default(cuid())
+  userId          String
+  totalAmount     Float
+  status          OrderStatus   @default(PENDING)
+  shippingAddressId String
+  paymentMethod   String
+  paymentStatus   PaymentStatus @default(PENDING)
+  notes           String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  // İlişkiler
+  user            User        @relation(fields: [userId], references: [id])
+  shippingAddress Address     @relation(fields: [shippingAddressId], references: [id])
+  items           OrderItem[]
+
+  @@map("orders")
+}
+
+// Sipariş durumları
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PREPARING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+// Ödeme durumları
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+}
+
+// Sipariş öğesi modeli
+model OrderItem {
+  id         String   @id @default(cuid())
+  orderId    String
+  productId  String
+  quantity   Int
+  price      Float
+  totalPrice Float
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // İlişkiler
+  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id])
+
+  @@map("order_items")
+}
