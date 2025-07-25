@@ -70,7 +70,11 @@ export async function PUT(request: NextRequest) {
       const body = await request.json();
 
       // Güncellenebilir alanları filtrele
-      const updateData: any = {};
+      const updateData: {
+        firstName?: string;
+        lastName?: string;
+        phone?: string;
+      } = {};
       if (body.firstName) updateData.firstName = body.firstName;
       if (body.lastName) updateData.lastName = body.lastName;
       if (body.phone) updateData.phone = body.phone;

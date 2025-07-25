@@ -11,7 +11,7 @@ export async function GET(
   request: NextRequest,
   { params }: RouteParams
 ) {
-  return withOptionalAuth(request, async (req: AuthenticatedRequest) => {
+  return withOptionalAuth(request, async () => {
     try {
       const { id } = params;
       const { searchParams } = new URL(request.url);
@@ -41,7 +41,13 @@ export async function GET(
       }
 
       // Where koşulları
-      const where: any = {
+      const where: {
+        categoryId: string;
+        isActive: boolean;
+        price?: { gte?: number; lte?: number };
+        name?: { contains: string; mode: 'insensitive' };
+        stock?: { gt: number };
+      } = {
         categoryId: id,
         isActive: true,
       };
@@ -63,7 +69,7 @@ export async function GET(
       }
 
       // Sıralama
-      const orderBy: any = {};
+      const orderBy: Record<string, 'asc' | 'desc'> = {};
       orderBy[sortBy] = sortOrder;
 
       // Sayfalama
