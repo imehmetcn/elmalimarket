@@ -135,13 +135,13 @@ export class ServiceWorkerManager {
 
   // Background sync methods
   async syncCart(): Promise<void> {
-    if (!this.registration || !this.registration.sync) {
+    if (!this.registration || !(this.registration as any).sync) {
       console.log('Background sync not supported');
       return;
     }
 
     try {
-      await this.registration.sync.register('cart-sync');
+      await (this.registration as any).sync.register('cart-sync');
       console.log('Cart sync registered');
     } catch (error) {
       console.error('Cart sync registration failed:', error);
@@ -149,13 +149,13 @@ export class ServiceWorkerManager {
   }
 
   async syncOrders(): Promise<void> {
-    if (!this.registration || !this.registration.sync) {
+    if (!this.registration || !(this.registration as any).sync) {
       console.log('Background sync not supported');
       return;
     }
 
     try {
-      await this.registration.sync.register('order-sync');
+      await (this.registration as any).sync.register('order-sync');
       console.log('Order sync registered');
     } catch (error) {
       console.error('Order sync registration failed:', error);

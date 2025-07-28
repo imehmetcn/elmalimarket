@@ -1,9 +1,4 @@
-import { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: 'Çevrimdışı - Elmalı Market',
-  description: 'İnternet bağlantınızı kontrol edin',
-};
+'use client';
 
 export default function OfflinePage() {
   return (

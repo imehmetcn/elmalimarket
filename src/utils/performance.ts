@@ -173,8 +173,8 @@ export class PerformanceMonitor {
 
   private sendToAnalytics(name: string, value: number): void {
     // Send to Google Analytics, custom analytics, etc.
-    if (typeof gtag !== 'undefined') {
-      gtag('event', 'performance_metric', {
+    if (typeof window !== 'undefined' && (window as any).gtag) {
+      (window as any).gtag('event', 'performance_metric', {
         metric_name: name,
         metric_value: Math.round(value),
         custom_parameter: 'elmali_market'
