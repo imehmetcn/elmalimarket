@@ -4,8 +4,8 @@ import './globals.css';
 import PerformanceProvider from '@/components/performance/PerformanceProvider';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
+import ScriptLoader from '@/components/ScriptLoader';
 import { APP_CONFIG } from '@/lib/constants';
-import Script from 'next/script';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -82,9 +82,7 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="//via.placeholder.com" />
       </head>
       <body>
-        <Script src="https://code.jquery.com/jquery-3.6.0.min.js" strategy="beforeInteractive" />
-        <Script src="/init-showmar.js" strategy="beforeInteractive" />
-        <Script src="/showmar-theme.js" strategy="afterInteractive" />
+        <ScriptLoader />
         
         <PerformanceProvider>
           <div id="header">

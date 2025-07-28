@@ -1,8 +1,349 @@
 @import url('https://fonts.googleapis.com/css2?family=Maven+Pro:wght@400;500;600;700;800;900&display=swap');
 
-/* Showmar Theme CSS */
-@import '../styles/showmar-theme.css';
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Showmar Theme - Essential Styles Only */
+.container {
+  padding-right: 15px;
+  padding-left: 15px;
+  max-width: 1140px;
+  margin: 0 auto;
+}
+
+.row {
+  margin-right: -15px;
+  margin-left: -15px;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.col {
+  flex: 1 0 0%;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+.col-auto {
+  flex: 0 0 auto;
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+/* Header Styles */
+.header-top {
+  height: 4rem;
+  width: 100%;
+  background: #F8D6D9;
+  display: flex;
+  align-items: center;
+}
+
+.header-top p {
+  display: flex;
+  align-items: center;
+  color: #E40614;
+  font-size: 1.3rem;
+  margin-bottom: 0;
+}
+
+.header-top-2 {
+  display: flex;
+  background: #FBFBFB;
+  height: 5rem;
+  align-items: center;
+}
+
+.menu-items-row1,
+.menu-items-row2 {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.menu-items-row1 li,
+.menu-items-row2 li {
+  margin-right: 3rem;
+}
+
+.menu-items-row1 li:last-child,
+.menu-items-row2 li:last-child {
+  margin-right: 0;
+}
+
+.menu-items-row1 a,
+.menu-items-row2 a {
+  color: #747474;
+  font-size: 1.4rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+}
+
+.menu-items-row1 a:hover,
+.menu-items-row2 a:hover {
+  color: #00A34E;
+}
+
+.header-middle {
+  display: flex;
+  align-items: center;
+  background: #fff;
+  margin-bottom: 1.5rem;
+}
+
+.header-middle-inner {
+  position: relative;
+  box-shadow: 0 9px 14px -9px #ccc;
+  z-index: 98;
+  width: 100%;
+  padding: 1rem 0;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.8rem 0;
+}
+
+.search form {
+  position: relative;
+}
+
+.search form input {
+  width: 100%;
+  padding: 1rem 8rem 1rem 2.7rem;
+  border: 2px solid #EFEFEF;
+  height: 5rem;
+  border-radius: 1rem;
+  color: #A5A5A5;
+  font-size: 1.4rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.search form input:focus {
+  border-color: #00A34E;
+  outline: none;
+}
+
+.search form button {
+  position: absolute;
+  top: 4.5px;
+  right: 5px;
+  height: 4rem;
+  width: 6.5rem;
+  background: #00A34E;
+  border: none;
+  border-radius: 0.7rem;
+  padding: 0;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.search form button:hover {
+  background: #068040;
+}
+
+.user-menu-wrap,
+.cart-menu a {
+  display: flex;
+  align-items: center;
+  margin-right: 3rem;
+  text-decoration: none;
+}
+
+.user-menu-wrap > i,
+.cart-menu a > i {
+  width: 4.5rem;
+  height: 4.5rem;
+  border: 2px solid #EFEFEF;
+  border-radius: 100%;
+  box-sizing: border-box;
+  transition: all 0.2s ease-in-out;
+  margin-right: 1rem;
+  background: #fff;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-inner,
+.cart-inner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.user-inner a,
+.cart-inner span {
+  font-size: 1.3rem;
+  line-height: 1.3rem;
+  transition: all 0.2s ease-in-out;
+  font-weight: 500;
+  color: #747474;
+  text-decoration: none;
+  margin-bottom: 0.3rem;
+}
+
+.user-inner a:first-child {
+  color: #484848;
+}
+
+.cart-inner div {
+  font-size: 1.4rem;
+  font-weight: 500;
+  color: #E40614;
+  line-height: 1.4rem;
+}
+
+/* Navigation Styles */
+.nav-wrapper {
+  position: relative;
+  width: 27rem;
+  flex-direction: column;
+  display: flex;
+  z-index: 90;
+  background: #fff;
+  border-radius: 1rem;
+}
+
+.nav-wrapper > span {
+  display: flex;
+  align-items: center;
+  height: 6rem;
+  background: #00A34E;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  padding: 0 3rem;
+  box-sizing: border-box;
+}
+
+#navigation {
+  position: relative;
+  background: #fff;
+  border-bottom-left-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+  padding-top: 1rem;
+}
+
+.category-level-1 > ul {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.category-level-1 > ul > li {
+  padding: 0 1.5rem;
+}
+
+.category-level-1 > ul > li > a {
+  display: flex;
+  align-items: center;
+  color: #484848;
+  font-size: 1.4rem;
+  padding: 0;
+  height: 4.5rem;
+  transition: all 0.2s ease-in-out;
+  border-bottom: 1px dashed #EFEFEF;
+  text-decoration: none;
+}
+
+.category-level-1 > ul > li > a div {
+  position: relative;
+  height: 4rem;
+  width: 3rem;
+  margin-right: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.category-level-1 > ul > li:nth-child(8) > a {
+  border-bottom: none;
+}
+
+.category-level-1 > ul > li:nth-child(n+9) {
+  display: none;
+}
+
+.category-level-1.active > ul > li:nth-child(8) {
+  border-bottom: 1px dashed #EFEFEF;
+}
+
+.category-level-1.active > ul > li:nth-child(n+9) {
+  display: flex;
+}
+
+.category-level-1.active > ul > li:last-child > a {
+  border-bottom: none;
+}
+
+.category-overflow {
+  margin-top: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 4rem;
+  background: #BCE5CF;
+  border-bottom-left-radius: 1rem;
+  border-bottom-right-radius: 1rem;
+  cursor: pointer;
+}
+
+.category-overflow span {
+  display: flex;
+  align-items: center;
+}
+
+.category-overflow span:before {
+  content: "Daha Fazla Göster";
+  font-size: 1.4rem;
+  color: #00A34E;
+  font-weight: 500;
+  display: inline-flex;
+}
+
+.category-level-1.active .category-overflow span:before {
+  content: "Kategorileri Gizle";
+}
+
+/* Current page styles */
+.current-page-default-entry {
+  background: #FBFBFB;
+}
+
+.current-page-default-entry .nav-wrapper {
+  display: flex;
+  background: transparent;
+}
+
+/* Body styles */
+body {
+  font-size: 1.2rem;
+  font-family: "Maven Pro", sans-serif;
+  color: #484848;
+  background: #fff;
+  margin: 0;
+  padding: 0;
+}
+
+/* Responsive */
+@media (max-width: 991px) {
+  .header-top,
+  .header-top-2 {
+    display: none;
+  }
+  
+  .nav-wrapper {
+    width: 100%;
+  }
+}

@@ -2,7 +2,11 @@ import jwt, { SignOptions } from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { NextRequest } from 'next/server';
 import { prisma } from './prisma';
-import { UserRole } from '@prisma/client';
+// UserRole enum tanımı
+export enum UserRole {
+  ADMIN = 'ADMIN',
+  CUSTOMER = 'CUSTOMER'
+}
 
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-key';
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d';

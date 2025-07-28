@@ -1,5 +1,20 @@
 import { prisma } from './prisma';
-import { OrderStatus, PaymentStatus } from '@prisma/client';
+// Enum tanımları
+export enum OrderStatus {
+  PENDING = 'PENDING',
+  CONFIRMED = 'CONFIRMED',
+  PREPARING = 'PREPARING',
+  SHIPPED = 'SHIPPED',
+  DELIVERED = 'DELIVERED',
+  CANCELLED = 'CANCELLED'
+}
+
+export enum PaymentStatus {
+  PENDING = 'PENDING',
+  PAID = 'PAID',
+  FAILED = 'FAILED',
+  REFUNDED = 'REFUNDED'
+}
 
 export interface CreateOrderData {
   userId: string;
