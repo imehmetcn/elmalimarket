@@ -4,7 +4,7 @@ import './globals.css';
 // import { AuthProvider } from '@/contexts/AuthContext';
 // import { CartProvider } from '@/contexts/CartContext';
 import PerformanceProvider from '@/components/performance/PerformanceProvider';
-// import ResponsiveHeader from '@/components/layout/ResponsiveHeader';
+import Header from '@/components/layout/Header';
 import Navigation from '@/components/layout/Navigation';
 import Footer from '@/components/layout/Footer';
 import { APP_CONFIG } from '@/lib/constants';
@@ -82,15 +82,19 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="//images.unsplash.com" />
         <link rel="dns-prefetch" href="//via.placeholder.com" />
+        <link rel="stylesheet" href="/showmar-theme.css" />
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
+        <script src="/showmar-theme.js" defer></script>
       </head>
       <body>
         <PerformanceProvider>
-          <div className="app-layout min-h-screen flex flex-col">
-            {/* <ResponsiveHeader /> */}
-            <Navigation />
-            <main className="main-content flex-1">{children}</main>
-            <Footer />
+          <div id="header">
+            <Header />
           </div>
+          <div className="container">
+            {children}
+          </div>
+          <Footer />
         </PerformanceProvider>
       </body>
     </html>
