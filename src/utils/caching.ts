@@ -377,7 +377,7 @@ export function createCacheKey(prefix: string, params: Record<string, any>): str
 // HOC for caching API responses
 export function withCache<T extends (...args: any[]) => Promise<any>>(
   fn: T,
-  cacheKey: string,
+  cacheKey: string | ((...args: any[]) => string),
   config: CacheConfig = {}
 ): T {
   return (async (...args: any[]) => {

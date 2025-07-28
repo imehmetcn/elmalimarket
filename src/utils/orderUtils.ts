@@ -158,7 +158,7 @@ export const ORDER_STATUS_FLOW = {
 // Check if status transition is valid
 export function isValidStatusTransition(currentStatus: string, newStatus: string): boolean {
   const allowedTransitions = ORDER_STATUS_FLOW[currentStatus as keyof typeof ORDER_STATUS_FLOW];
-  return allowedTransitions?.includes(newStatus) || false;
+  return allowedTransitions?.includes(newStatus as any) || false;
 }
 
 // Generate order timeline
