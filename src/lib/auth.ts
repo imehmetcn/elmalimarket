@@ -23,16 +23,13 @@ export interface AuthUser {
 
 // JWT token oluşturma
 export function generateToken(payload: JWTPayload): string {
-  const options: SignOptions = {
-    expiresIn: JWT_EXPIRES_IN
-  };
-  return jwt.sign(payload, JWT_SECRET, options);
+  return jwt.sign(payload, JWT_SECRET, { expiresIn: '7d' });
 }
 
 // JWT token doğrulama
 export function verifyToken(token: string): JWTPayload | null {
   try {
-    const decoded = jwt.verify(token, JWT_SECRET as string) as JWTPayload;
+    const decoded = jwt.verify(token, JWT_SECRET) as JWTPayload;
     return decoded;
   } catch (error) {
     console.error('JWT doğrulama hatası:', error);

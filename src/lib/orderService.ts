@@ -1,5 +1,5 @@
 import { prisma } from './prisma';
-import { OrderStatus, PaymentStatus } from '@/types';
+import { OrderStatus, PaymentStatus } from '@prisma/client';
 
 export interface CreateOrderData {
   userId: string;
@@ -340,8 +340,8 @@ export class OrderService {
     }
 
     // Check if order can be cancelled
-    const cancellableStatuses = [OrderStatus.PENDING, OrderStatus.CONFIRMED];
-    if (!cancellableStatuses.includes(order.status)) {
+    const cancellableStatuses: OrderStatus[] = [OrderStatus.PENDING, OrderStatus.CONFIRMED];
+    if (!cancellableStatuses.includes(order.status as OrderStatus)) {
       throw new Error('Bu sipariş iptal edilemez');
     }
 
