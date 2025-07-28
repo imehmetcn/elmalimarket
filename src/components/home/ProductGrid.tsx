@@ -1,4 +1,3 @@
-import Link from 'next/link';
 
 const featuredProducts = [
   {
@@ -6,7 +5,7 @@ const featuredProducts = [
     name: 'Taze Salatalık',
     price: '12,90',
     originalPrice: '15,90',
-    image: 'https://images.unsplash.com/photo-1449300079323-02e209d9d3a6?w=200&h=200&fit=crop',
+    image: 'https://via.placeholder.com/200x200/4CAF50/FFFFFF?text=🥒',
     discount: '19%',
     badge: 'İndirim'
   },
@@ -14,26 +13,26 @@ const featuredProducts = [
     id: 2,
     name: 'Organik Domates',
     price: '18,50',
-    image: 'https://images.unsplash.com/photo-1546470427-e5ac2d7e2e4e?w=200&h=200&fit=crop',
+    image: 'https://via.placeholder.com/200x200/FF5722/FFFFFF?text=🍅',
     badge: 'Yeni'
   },
   {
     id: 3,
     name: 'Taze Marul',
     price: '8,90',
-    image: 'https://images.unsplash.com/photo-1622206151226-18ca2c9ab4a1?w=200&h=200&fit=crop'
+    image: 'https://via.placeholder.com/200x200/8BC34A/FFFFFF?text=🥬'
   },
   {
     id: 4,
     name: 'Taze Soğan',
     price: '6,50',
-    image: 'https://images.unsplash.com/photo-1518977676601-b53f82aba655?w=200&h=200&fit=crop'
+    image: 'https://via.placeholder.com/200x200/FFC107/FFFFFF?text=🧅'
   },
   {
     id: 5,
     name: 'Organik Havuç',
     price: '14,90',
-    image: 'https://images.unsplash.com/photo-1445282768818-728615cc910a?w=200&h=200&fit=crop'
+    image: 'https://via.placeholder.com/200x200/FF9800/FFFFFF?text=🥕'
   }
 ];
 
@@ -49,7 +48,7 @@ export default function ProductGrid() {
           <button className="bg-gray-200 text-gray-700 px-3 py-1.5 rounded text-sm font-medium hover:bg-gray-300">Popüler</button>
         </div>
       </div>
-      
+
       <div className="grid grid-cols-5 gap-3">
         {featuredProducts.map((product) => (
           <div key={product.id} className="bg-white border border-gray-200 rounded-lg p-3 hover:shadow-md transition-shadow">
@@ -60,9 +59,8 @@ export default function ProductGrid() {
                 className="w-full h-28 object-cover rounded"
               />
               {product.badge && (
-                <span className={`absolute top-1 left-1 px-1.5 py-0.5 text-xs rounded font-medium ${
-                  product.badge === 'İndirim' ? 'bg-red-500 text-white' : 'bg-green-500 text-white'
-                }`}>
+                <span className={`absolute top-1 left-1 px-1.5 py-0.5 text-xs rounded font-medium ${product.badge === 'İndirim' ? 'bg-red-500 text-white' : 'bg-green-500 text-white'
+                  }`}>
                   {product.badge}
                 </span>
               )}

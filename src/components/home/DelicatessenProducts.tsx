@@ -3,28 +3,28 @@ const delicatessenProducts = [
     id: 1,
     name: 'Kaşar Peyniri',
     price: '89,90',
-    image: 'https://images.unsplash.com/photo-1486297678162-eb2a19b0a32d?w=200&h=200&fit=crop',
+    image: 'https://via.placeholder.com/200x200/FFEB3B/000000?text=🧀',
     weight: '500g'
   },
   {
     id: 2,
     name: 'Beyaz Peynir',
     price: '65,90',
-    image: 'https://images.unsplash.com/photo-1628088062854-d1870b4553da?w=200&h=200&fit=crop',
+    image: 'https://via.placeholder.com/200x200/F5F5F5/000000?text=🧀',
     weight: '500g'
   },
   {
     id: 3,
     name: 'Sucuklu Tost',
     price: '25,90',
-    image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=200&h=200&fit=crop',
+    image: 'https://via.placeholder.com/200x200/FF5722/FFFFFF?text=🥪',
     weight: '200g'
   },
   {
     id: 4,
     name: 'Dana Salam',
     price: '45,90',
-    image: 'https://images.unsplash.com/photo-1544025162-d76694265947?w=200&h=200&fit=crop',
+    image: 'https://via.placeholder.com/200x200/E91E63/FFFFFF?text=🥓',
     weight: '250g'
   }
 ];

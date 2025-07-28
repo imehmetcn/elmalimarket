@@ -3,28 +3,28 @@ const freshProducts = [
     id: 1,
     name: 'Taze Lahana',
     price: '8,90',
-    image: 'https://images.unsplash.com/photo-1594282486552-05b4d80fbb9f?w=200&h=200&fit=crop',
+    image: 'https://via.placeholder.com/200x200/4CAF50/FFFFFF?text=🥬',
     badge: 'Taze'
   },
   {
     id: 2,
     name: 'Taze Salatalık',
     price: '12,90',
-    image: 'https://images.unsplash.com/photo-1449300079323-02e209d9d3a6?w=200&h=200&fit=crop',
+    image: 'https://via.placeholder.com/200x200/4CAF50/FFFFFF?text=🥒',
     badge: 'Taze'
   },
   {
     id: 3,
     name: 'Taze Üzüm',
     price: '24,90',
-    image: 'https://images.unsplash.com/photo-1537640538966-79f369143f8f?w=200&h=200&fit=crop',
+    image: 'https://via.placeholder.com/200x200/9C27B0/FFFFFF?text=🍇',
     badge: 'Taze'
   },
   {
     id: 4,
     name: 'Taze Domates',
     price: '16,50',
-    image: 'https://images.unsplash.com/photo-1546470427-e5ac2d7e2e4e?w=200&h=200&fit=crop',
+    image: 'https://via.placeholder.com/200x200/FF5722/FFFFFF?text=🍅',
     badge: 'Taze'
   }
 ];

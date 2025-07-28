@@ -1,13 +1,11 @@
 import type { Metadata } from 'next';
 import { Poppins } from 'next/font/google';
 import './globals.css';
-// import { AuthProvider } from '@/contexts/AuthContext';
-// import { CartProvider } from '@/contexts/CartContext';
 import PerformanceProvider from '@/components/performance/PerformanceProvider';
 import Header from '@/components/layout/Header';
-import Navigation from '@/components/layout/Navigation';
 import Footer from '@/components/layout/Footer';
 import { APP_CONFIG } from '@/lib/constants';
+import Script from 'next/script';
 
 const poppins = Poppins({
   subsets: ['latin'],
@@ -82,12 +80,12 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="//images.unsplash.com" />
         <link rel="dns-prefetch" href="//via.placeholder.com" />
-        <link rel="stylesheet" href="/showmar-theme.css" />
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="/init-showmar.js"></script>
-        <script src="/showmar-theme.js"></script>
       </head>
       <body>
+        <Script src="https://code.jquery.com/jquery-3.6.0.min.js" strategy="beforeInteractive" />
+        <Script src="/init-showmar.js" strategy="beforeInteractive" />
+        <Script src="/showmar-theme.js" strategy="afterInteractive" />
+        
         <PerformanceProvider>
           <div id="header">
             <Header />

@@ -3,28 +3,28 @@ const meatProducts = [
     id: 1,
     name: 'Dana Kuşbaşı',
     price: '189,90',
-    image: 'https://images.unsplash.com/photo-1448907503123-67254d59ca4f?w=200&h=200&fit=crop',
+    image: 'https://via.placeholder.com/200x200/8D6E63/FFFFFF?text=🥩',
     weight: '500g'
   },
   {
     id: 2,
     name: 'Tavuk Göğsü',
     price: '45,90',
-    image: 'https://images.unsplash.com/photo-1604503468506-a8da13d82791?w=200&h=200&fit=crop',
+    image: 'https://via.placeholder.com/200x200/FFC107/FFFFFF?text=🍗',
     weight: '1kg'
   },
   {
     id: 3,
     name: 'Kıyma',
     price: '159,90',
-    image: 'https://images.unsplash.com/photo-1603048297172-c92544798d5a?w=200&h=200&fit=crop',
+    image: 'https://via.placeholder.com/200x200/795548/FFFFFF?text=🍖',
     weight: '500g'
   },
   {
     id: 4,
     name: 'Somon Fileto',
     price: '89,90',
-    image: 'https://images.unsplash.com/photo-1544943910-4c1dc44aab44?w=200&h=200&fit=crop',
+    image: 'https://via.placeholder.com/200x200/FF9800/FFFFFF?text=🐟',
     weight: '250g'
   }
 ];
