@@ -53,7 +53,7 @@ export interface Product {
   stock: number;
   categoryId: string;
   category?: Category;
-  images: string; // SQLite için string olarak saklayacağız (JSON)
+  images: string[]; // Frontend'de string array olarak kullanacağız
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
@@ -92,6 +92,7 @@ export interface OrderItem {
 // Sipariş tipi (Prisma ile uyumlu)
 export interface Order {
   id: string;
+  orderNumber?: string | null;
   userId: string;
   user?: User;
   items: OrderItem[];
@@ -101,6 +102,8 @@ export interface Order {
   shippingAddress?: Address;
   paymentMethod: string;
   paymentStatus: PaymentStatus;
+  trackingNumber?: string | null;
+  estimatedDelivery?: Date | null;
   notes?: string | null;
   createdAt: Date;
   updatedAt: Date;

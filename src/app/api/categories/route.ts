@@ -5,14 +5,17 @@ import { categoryCreateSchema } from '@/lib/validations';
 
 // GET /api/categories - Kategori listesi
 export async function GET(request: NextRequest) {
-  return withOptionalAuth(request, async (req: AuthenticatedRequest) => {
+  return withOptionalAuth(request, async () => {
     try {
       const { searchParams } = new URL(request.url);
       const includeProducts = searchParams.get('includeProducts') === 'true';
       const parentId = searchParams.get('parentId');
 
       // Where koşulları
-      const where: any = {
+      const where: {
+        isActive: boolean;
+        parentId?: string | null;
+      } = {
         isActive: true,
       };
 
@@ -98,7 +101,7 @@ export async function GET(request: NextRequest) {
 
 // POST /api/categories - Yeni kategori oluşturma (admin)
 export async function POST(request: NextRequest) {
-  return withAdminAuth(request, async (req: AuthenticatedRequest) => {
+  return withAdminAuth(request, async () => {
     try {
       const body = await request.json();
       

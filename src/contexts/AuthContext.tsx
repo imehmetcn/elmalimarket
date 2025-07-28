@@ -32,25 +32,45 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       const response = await fetch(API_ROUTES.PROFILE, {
         credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
       });
 
       if (response.ok) {
-        const data = await response.json();
-        if (data.success) {
-          setUser({
-            id: data.data.id,
-            email: data.data.email,
-            firstName: data.data.firstName,
-            lastName: data.data.lastName,
-            role: data.data.role,
-          });
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+          const data = await response.json();
+          if (data.success) {
+            const userData = {
+              id: data.data.id,
+              email: data.data.email,
+              firstName: data.data.firstName,
+              lastName: data.data.lastName,
+              role: data.data.role,
+            };
+            setUser(userData);
+            localStorage.setItem('user', JSON.stringify(userData));
+          } else {
+            setUser(null);
+            localStorage.removeItem('user');
+          }
         } else {
+          // Sadece beklenmeyen yanıt formatları için hata göster
+          console.error('API yanıtı JSON değil:', await response.text());
           setUser(null);
         }
       } else {
+        // 401 (Unauthorized) normal bir durum - kullanıcı giriş yapmamış
+        // Sadece beklenmeyen hata kodları için console'a yazdır
+        if (response.status !== 401) {
+          console.error('Beklenmeyen API yanıt kodu:', response.status);
+        }
         setUser(null);
+        localStorage.removeItem('user');
       }
     } catch (error) {
+      // Network hataları vs. için hata göster
       console.error('Kullanıcı bilgileri alınamadı:', error);
       setUser(null);
     } finally {
@@ -73,7 +93,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const data = await response.json();
 
       if (data.success) {
-        setUser(data.data.user);
+        const userData = data.data.user;
+        setUser(userData);
+        localStorage.setItem('user', JSON.stringify(userData));
         return true;
       } else {
         console.error('Giriş hatası:', data.message);
@@ -100,7 +122,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const data = await response.json();
 
       if (data.success) {
-        setUser(data.data.user);
+        const userData = data.data.user;
+        setUser(userData);
+        localStorage.setItem('user', JSON.stringify(userData));
         return true;
       } else {
         console.error('Kayıt hatası:', data.message);
@@ -123,12 +147,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       console.error('Çıkış hatası:', error);
     } finally {
       setUser(null);
+      localStorage.removeItem('user');
     }
   };
 
-  // Sayfa yüklendiğinde kullanıcı bilgilerini kontrol et
+  // Sayfa yüklendiğinde localStorage'dan kullanıcı bilgilerini kontrol et
   useEffect(() => {
-    refreshUser();
+    const checkStoredAuth = () => {
+      try {
+        const storedUser = localStorage.getItem('user');
+        if (storedUser) {
+          const userData = JSON.parse(storedUser);
+          setUser(userData);
+          // Stored user varsa, server'dan güncel bilgileri al
+          refreshUser();
+        } else {
+          setLoading(false);
+        }
+      } catch (error) {
+        console.error('Stored user data hatası:', error);
+        localStorage.removeItem('user');
+        setLoading(false);
+      }
+    };
+
+    checkStoredAuth();
   }, []);
 
   const value: AuthContextType = {

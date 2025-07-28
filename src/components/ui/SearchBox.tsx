@@ -1,230 +1,201 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { Product } from '@/types';
-import { API_ROUTES, ROUTES } from '@/lib/constants';
-import { formatPrice } from '@/utils/format';
+import { cn } from '@/utils/format';
 
-interface SearchBoxProps {
-  placeholder?: string;
+interface SearchSuggestion {
+  id: string;
+  text: string;
+  type: 'product' | 'category';
 }
 
-export default function SearchBox({ placeholder = "Ürün, kategori veya marka ara..." }: SearchBoxProps) {
-  const [query, setQuery] = useState('');
-  const [results, setResults] = useState<Product[]>([]);
-  const [isOpen, setIsOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const router = useRouter();
-  const searchRef = useRef<HTMLDivElement>(null);
+interface SearchBoxProps {
+  value: string;
+  onChange: (value: string) => void;
+  onSearch: (query: string) => void;
+  placeholder?: string;
+  className?: string;
+  suggestions?: SearchSuggestion[];
+  isLoading?: boolean;
+  showSuggestions?: boolean;
+}
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
-        setIsOpen(false);
-      }
-    };
+export default function SearchBox({
+  value,
+  onChange,
+  onSearch,
+  placeholder = 'Ürün ara...',
+  className,
+  suggestions = [],
+  isLoading = false,
+  showSuggestions = true,
+}: SearchBoxProps) {
+  const [isFocused, setIsFocused] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(-1);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const suggestionRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  useEffect(() => {
-    const searchProducts = async () => {
-      if (query.length < 2) {
-        setResults([]);
-        setIsOpen(false);
-        return;
-      }
-
-      setLoading(true);
-      try {
-        const response = await fetch(`${API_ROUTES.PRODUCTS}?search=${encodeURIComponent(query)}&limit=8`);
-        const data = await response.json();
-        
-        if (data.success) {
-          setResults(data.data);
-          setIsOpen(true);
-        }
-      } catch (error) {
-        console.error('Arama hatası:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    const debounceTimer = setTimeout(searchProducts, 300);
-    return () => clearTimeout(debounceTimer);
-  }, [query]);
+  const showSuggestionList = showSuggestions && isFocused && value.length > 0 && suggestions.length > 0;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (query.trim()) {
-      router.push(`${ROUTES.SEARCH}?q=${encodeURIComponent(query.trim())}`);
-      setIsOpen(false);
+    if (selectedIndex >= 0 && suggestions[selectedIndex]) {
+      onSearch(suggestions[selectedIndex].text);
+      onChange(suggestions[selectedIndex].text);
+    } else {
+      onSearch(value);
+    }
+    setIsFocused(false);
+    inputRef.current?.blur();
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (!showSuggestionList) return;
+
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        setSelectedIndex(prev => 
+          prev < suggestions.length - 1 ? prev + 1 : prev
+        );
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        setSelectedIndex(prev => prev > 0 ? prev - 1 : -1);
+        break;
+      case 'Escape':
+        setIsFocused(false);
+        inputRef.current?.blur();
+        break;
     }
   };
 
-  const handleProductClick = () => {
-    setIsOpen(false);
-    setQuery('');
+  const handleSuggestionClick = (suggestion: SearchSuggestion) => {
+    onChange(suggestion.text);
+    onSearch(suggestion.text);
+    setIsFocused(false);
   };
 
-  const popularSearches = [
-    'Elma', 'Domates', 'Süt', 'Ekmek', 'Tavuk', 'Peynir'
-  ];
+  // Scroll selected suggestion into view
+  useEffect(() => {
+    if (selectedIndex >= 0 && suggestionRefs.current[selectedIndex]) {
+      suggestionRefs.current[selectedIndex]?.scrollIntoView({
+        block: 'nearest',
+      });
+    }
+  }, [selectedIndex]);
 
   return (
-    <div ref={searchRef} className="relative w-full">
+    <div className={cn('relative', className)}>
       <form onSubmit={handleSubmit} className="relative">
-        <div className="relative flex">
+        <div className="relative">
           <input
+            ref={inputRef}
             type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => {
+              // Delay to allow suggestion clicks
+              setTimeout(() => setIsFocused(false), 200);
+            }}
+            onKeyDown={handleKeyDown}
             placeholder={placeholder}
-            className="flex-1 px-4 py-3 border-2 border-gray-200 rounded-l-lg focus:border-primary-500 focus:outline-none transition-colors bg-white text-gray-900 placeholder-gray-500"
+            className={cn(
+              'w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg',
+              'focus:ring-2 focus:ring-primary-500 focus:border-primary-500',
+              'placeholder-gray-500 text-gray-900'
+            )}
           />
-          <button
-            type="submit"
-            className="px-6 py-3 bg-primary-600 text-white rounded-r-lg hover:bg-primary-700 transition-colors flex items-center justify-center min-w-[60px]"
-          >
-            {loading ? (
-              <div className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full"></div>
+          
+          {/* Search Icon */}
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            {isLoading ? (
+              <svg
+                className="w-5 h-5 text-gray-400 animate-spin"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                />
+              </svg>
             ) : (
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              <svg
+                className="w-5 h-5 text-gray-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
               </svg>
             )}
-          </button>
+          </div>
+
+          {/* Clear Button */}
+          {value && (
+            <button
+              type="button"
+              onClick={() => onChange('')}
+              className="absolute inset-y-0 right-0 pr-3 flex items-center"
+            >
+              <svg
+                className="w-4 h-4 text-gray-400 hover:text-gray-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          )}
         </div>
       </form>
 
-      {/* Search Results Dropdown */}
-      {isOpen && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-200 rounded-xl shadow-2xl z-50 max-h-[500px] overflow-hidden">
-          {results.length > 0 ? (
-            <div className="max-h-[400px] overflow-y-auto">
-              <div className="p-3 bg-gray-50 border-b">
-                <h4 className="text-sm font-semibold text-gray-700">Ürünler</h4>
+      {/* Suggestions Dropdown */}
+      {showSuggestionList && (
+        <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+          {suggestions.map((suggestion, index) => (
+            <button
+              key={suggestion.id}
+              ref={(el) => (suggestionRefs.current[index] = el)}
+              onClick={() => handleSuggestionClick(suggestion)}
+              className={cn(
+                'w-full px-4 py-2 text-left hover:bg-gray-50 flex items-center gap-3',
+                selectedIndex === index && 'bg-primary-50 text-primary-700'
+              )}
+            >
+              <div className="flex-shrink-0">
+                {suggestion.type === 'product' ? (
+                  <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                  </svg>
+                ) : (
+                  <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                  </svg>
+                )}
               </div>
-              {results.map((product) => (
-                <Link
-                  key={product.id}
-                  href={ROUTES.PRODUCT_DETAIL(product.id)}
-                  onClick={handleProductClick}
-                  className="flex items-center p-4 hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-b-0"
-                >
-                  <div className="w-14 h-14 bg-gray-100 rounded-lg mr-4 flex-shrink-0 overflow-hidden">
-                    {product.images && product.images.length > 0 ? (
-                      <img
-                        src={product.images[0]}
-                        alt={product.name}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-gray-400">
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                      </div>
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h4 className="font-medium text-gray-900 truncate mb-1">
-                      {product.name}
-                    </h4>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center">
-                        {product.discountPrice ? (
-                          <>
-                            <span className="font-bold text-primary-600 mr-2">
-                              {formatPrice(product.discountPrice)}
-                            </span>
-                            <span className="text-sm text-gray-500 line-through">
-                              {formatPrice(product.price)}
-                            </span>
-                          </>
-                        ) : (
-                          <span className="font-bold text-primary-600">
-                            {formatPrice(product.price)}
-                          </span>
-                        )}
-                      </div>
-                      {product.stock > 0 ? (
-                        <span className="text-xs text-green-600 bg-green-100 px-2 py-1 rounded-full">
-                          Stokta
-                        </span>
-                      ) : (
-                        <span className="text-xs text-red-600 bg-red-100 px-2 py-1 rounded-full">
-                          Tükendi
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </Link>
-              ))}
-              <div className="p-4 bg-gray-50 border-t">
-                <button
-                  onClick={() => {
-                    router.push(`${ROUTES.SEARCH}?q=${encodeURIComponent(query)}`);
-                    setIsOpen(false);
-                  }}
-                  className="w-full text-center text-primary-600 hover:text-primary-700 font-medium py-2 rounded-lg hover:bg-white transition-colors"
-                >
-                  "{query}" için tüm sonuçları gör ({results.length}+)
-                </button>
-              </div>
-            </div>
-          ) : query.length >= 2 && !loading ? (
-            <div className="p-8 text-center">
-              <svg className="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-              <h4 className="font-medium text-gray-900 mb-2">Sonuç bulunamadı</h4>
-              <p className="text-gray-500 mb-4">"{query}" için ürün bulunamadı</p>
-              <div className="space-y-2">
-                <p className="text-sm text-gray-600">Popüler aramalar:</p>
-                <div className="flex flex-wrap gap-2 justify-center">
-                  {popularSearches.map((search, index) => (
-                    <button
-                      key={index}
-                      onClick={() => {
-                        setQuery(search);
-                        router.push(`${ROUTES.SEARCH}?q=${encodeURIComponent(search)}`);
-                        setIsOpen(false);
-                      }}
-                      className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm hover:bg-gray-200 transition-colors"
-                    >
-                      {search}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          ) : query.length === 0 ? (
-            <div className="p-4">
-              <div className="mb-4">
-                <h4 className="font-medium text-gray-900 mb-3">Popüler Aramalar</h4>
-                <div className="flex flex-wrap gap-2">
-                  {popularSearches.map((search, index) => (
-                    <button
-                      key={index}
-                      onClick={() => {
-                        setQuery(search);
-                        router.push(`${ROUTES.SEARCH}?q=${encodeURIComponent(search)}`);
-                        setIsOpen(false);
-                      }}
-                      className="px-3 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm hover:bg-gray-200 transition-colors"
-                    >
-                      {search}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-          ) : null}
+              <span className="text-sm text-gray-900">{suggestion.text}</span>
+              <span className="text-xs text-gray-500 ml-auto">
+                {suggestion.type === 'product' ? 'Ürün' : 'Kategori'}
+              </span>
+            </button>
+          ))}
         </div>
       )}
     </div>

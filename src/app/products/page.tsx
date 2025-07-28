@@ -130,6 +130,7 @@ export default function ProductsPage() {
           <div className="lg:col-span-1">
             <ProductFilters
               filters={filters}
+              categories={[]}
               onFiltersChange={handleFiltersChange}
             />
           </div>

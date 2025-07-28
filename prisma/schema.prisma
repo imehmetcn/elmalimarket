@@ -135,16 +135,19 @@ model CartItem {
 
 // Sipariş modeli
 model Order {
-  id              String        @id @default(cuid())
-  userId          String
-  totalAmount     Float
-  status          OrderStatus   @default(PENDING)
+  id                String        @id @default(cuid())
+  orderNumber       String?       @unique
+  userId            String
+  totalAmount       Float
+  status            OrderStatus   @default(PENDING)
   shippingAddressId String
-  paymentMethod   String
-  paymentStatus   PaymentStatus @default(PENDING)
-  notes           String?
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
+  paymentMethod     String
+  paymentStatus     PaymentStatus @default(PENDING)
+  trackingNumber    String?
+  estimatedDelivery DateTime?
+  notes             String?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
 
   // İlişkiler
   user            User        @relation(fields: [userId], references: [id])

@@ -56,3 +56,8 @@ export const createSlug = (text: string): string => {
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/(^-|-$)/g, '');
 };
+
+// Class name utility (cn) - Tailwind CSS class merging
+export const cn = (...classes: (string | undefined | null | false)[]): string => {
+  return classes.filter(Boolean).join(' ');
+};

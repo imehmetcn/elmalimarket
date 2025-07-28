@@ -1,10 +1,12 @@
 import type { Metadata } from 'next';
 import { Poppins } from 'next/font/google';
 import './globals.css';
-import SimpleHeader from '@/components/layout/SimpleHeader';
-import Footer from '@/components/layout/Footer';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { CartProvider } from '@/contexts/CartContext';
+import PerformanceProvider from '@/components/performance/PerformanceProvider';
+import ResponsiveHeader from '@/components/layout/ResponsiveHeader';
+import Navigation from '@/components/layout/Navigation';
+import Footer from '@/components/layout/Footer';
 import { APP_CONFIG } from '@/lib/constants';
 
 const poppins = Poppins({
@@ -68,16 +70,32 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="tr" className={poppins.variable}>
-      <body className="font-sans antialiased">
-        <AuthProvider>
-          <CartProvider>
-            <div className="flex flex-col min-h-screen">
-              <SimpleHeader />
-              <main className="flex-1">{children}</main>
-              <Footer />
-            </div>
-          </CartProvider>
-        </AuthProvider>
+      <head>
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#2D5A27" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="Elmalı Market" />
+        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="//images.unsplash.com" />
+        <link rel="dns-prefetch" href="//via.placeholder.com" />
+      </head>
+      <body>
+        <PerformanceProvider>
+          <AuthProvider>
+            <CartProvider>
+              <div className="app-layout min-h-screen flex flex-col">
+                <ResponsiveHeader />
+                <Navigation />
+                <main className="main-content flex-1">{children}</main>
+                <Footer />
+              </div>
+            </CartProvider>
+          </AuthProvider>
+        </PerformanceProvider>
       </body>
     </html>
   );

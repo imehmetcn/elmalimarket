@@ -130,7 +130,7 @@ export async function PUT(
   request: NextRequest,
   { params }: RouteParams
 ) {
-  return withAdminAuth(request, async (req: AuthenticatedRequest) => {
+  return withAdminAuth(request, async () => {
     try {
       const { id } = params;
       const body = await request.json();
@@ -247,7 +247,7 @@ export async function DELETE(
   request: NextRequest,
   { params }: RouteParams
 ) {
-  return withAdminAuth(request, async (req: AuthenticatedRequest) => {
+  return withAdminAuth(request, async () => {
     try {
       const { id } = params;
 
