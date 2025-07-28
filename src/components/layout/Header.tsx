@@ -47,7 +47,9 @@ export default function Header() {
                 <div className="header-middle-left">
                   <div className="logo">
                     <Link href="/">
-                      <img src="/logo.svg" alt="SHOWMAR" />
+                      <div style={{fontSize: '24px', fontWeight: 'bold', color: '#00A34E'}}>
+                        SHOWMAR
+                      </div>
                     </Link>
                   </div>
                 </div>
@@ -66,7 +68,7 @@ export default function Header() {
                 <div className="header-middle-right">
                   <div className="user-menu">
                     <div className="user-menu-wrap">
-                      <i><img src="/icons/user.svg" alt="User" /></i>
+                      <i><div style={{fontSize: '20px'}}>👤</div></i>
                       <div className="user-inner">
                         <Link href="/giris">Giriş</Link>
                         <Link href="/uyelik">Üyelik</Link>
@@ -76,7 +78,7 @@ export default function Header() {
 
                   <div className="cart-menu">
                     <Link href="/sepet">
-                      <i><img src="/icons/cart.svg" alt="Cart" /></i>
+                      <i><div style={{fontSize: '20px'}}>🛒</div></i>
                       <div className="cart-inner">
                         <span>Sepetim</span>
                         <div data-selector="cart-total-price">0,00 ₺</div>

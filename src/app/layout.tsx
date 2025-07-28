@@ -83,8 +83,9 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="//images.unsplash.com" />
         <link rel="dns-prefetch" href="//via.placeholder.com" />
         <link rel="stylesheet" href="/showmar-theme.css" />
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js" defer></script>
-        <script src="/showmar-theme.js" defer></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="/init-showmar.js"></script>
+        <script src="/showmar-theme.js"></script>
       </head>
       <body>
         <PerformanceProvider>
