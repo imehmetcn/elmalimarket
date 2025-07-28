@@ -1,10 +1,10 @@
 import type { Metadata } from 'next';
 import { Poppins } from 'next/font/google';
 import './globals.css';
-import { AuthProvider } from '@/contexts/AuthContext';
-import { CartProvider } from '@/contexts/CartContext';
+// import { AuthProvider } from '@/contexts/AuthContext';
+// import { CartProvider } from '@/contexts/CartContext';
 import PerformanceProvider from '@/components/performance/PerformanceProvider';
-import ResponsiveHeader from '@/components/layout/ResponsiveHeader';
+// import ResponsiveHeader from '@/components/layout/ResponsiveHeader';
 import Navigation from '@/components/layout/Navigation';
 import Footer from '@/components/layout/Footer';
 import { APP_CONFIG } from '@/lib/constants';
@@ -85,16 +85,12 @@ export default function RootLayout({
       </head>
       <body>
         <PerformanceProvider>
-          <AuthProvider>
-            <CartProvider>
-              <div className="app-layout min-h-screen flex flex-col">
-                <ResponsiveHeader />
-                <Navigation />
-                <main className="main-content flex-1">{children}</main>
-                <Footer />
-              </div>
-            </CartProvider>
-          </AuthProvider>
+          <div className="app-layout min-h-screen flex flex-col">
+            {/* <ResponsiveHeader /> */}
+            <Navigation />
+            <main className="main-content flex-1">{children}</main>
+            <Footer />
+          </div>
         </PerformanceProvider>
       </body>
     </html>

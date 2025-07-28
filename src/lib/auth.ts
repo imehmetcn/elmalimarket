@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import jwt, { SignOptions } from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { NextRequest } from 'next/server';
 import { prisma } from './prisma';
@@ -23,13 +23,16 @@ export interface AuthUser {
 
 // JWT token oluşturma
 export function generateToken(payload: JWTPayload): string {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+  const options: SignOptions = {
+    expiresIn: JWT_EXPIRES_IN
+  };
+  return jwt.sign(payload, JWT_SECRET, options);
 }
 
 // JWT token doğrulama
 export function verifyToken(token: string): JWTPayload | null {
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as JWTPayload;
+    const decoded = jwt.verify(token, JWT_SECRET as string) as JWTPayload;
     return decoded;
   } catch (error) {
     console.error('JWT doğrulama hatası:', error);
