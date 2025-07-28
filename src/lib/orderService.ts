@@ -12,8 +12,7 @@ export enum OrderStatus {
 export enum PaymentStatus {
   PENDING = 'PENDING',
   PAID = 'PAID',
-  FAILED = 'FAILED',
-  REFUNDED = 'REFUNDED'
+  FAILED = 'FAILED'
 }
 
 export interface CreateOrderData {

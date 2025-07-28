@@ -2,7 +2,8 @@ import jwt, { SignOptions } from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { NextRequest } from 'next/server';
 import { prisma } from './prisma';
-// UserRole enum tanımı
+
+// UserRole enum to match Prisma schema
 export enum UserRole {
   ADMIN = 'ADMIN',
   CUSTOMER = 'CUSTOMER'
@@ -23,6 +24,7 @@ export interface AuthUser {
   firstName: string;
   lastName: string;
   role: UserRole;
+  isActive: boolean;
 }
 
 // JWT token oluşturma
@@ -102,7 +104,10 @@ export async function authenticateUser(
       return null;
     }
 
-    return user;
+    return {
+      ...user,
+      role: user.role as UserRole
+    };
   } catch (error) {
     console.error('Kullanıcı doğrulama hatası:', error);
     return null;
@@ -145,7 +150,7 @@ export async function loginUser(
     const token = generateToken({
       userId: user.id,
       email: user.email,
-      role: user.role,
+      role: user.role as UserRole,
     });
 
     const authUser: AuthUser = {
@@ -153,7 +158,8 @@ export async function loginUser(
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
-      role: user.role,
+      role: user.role as UserRole,
+      isActive: user.isActive,
     };
 
     return { user: authUser, token };
@@ -200,6 +206,7 @@ export async function registerUser(userData: {
         firstName: true,
         lastName: true,
         role: true,
+        isActive: true,
       },
     });
 
@@ -207,10 +214,16 @@ export async function registerUser(userData: {
     const token = generateToken({
       userId: user.id,
       email: user.email,
-      role: user.role,
+      role: user.role as UserRole,
     });
 
-    return { user, token };
+    return { 
+      user: {
+        ...user,
+        role: user.role as UserRole
+      }, 
+      token 
+    };
   } catch (error) {
     console.error('Kayıt hatası:', error);
     return null;
